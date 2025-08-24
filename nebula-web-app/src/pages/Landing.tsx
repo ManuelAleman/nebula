@@ -24,11 +24,11 @@ const Landing = () => {
             {/* FEATURES */}
             <FeaturesSection features={features}/>
             {/* PRICING */}
-            <PricingSection pricingPlans={pricingPlans}/>
+            <PricingSection pricingPlans={pricingPlans} openSignUp={openSignUp}/>
             {/* TESTIMONIALS */}
             <TestimonialSection testimonials={testimonials}/>
             {/* CTA */}
-            <CTASection/>
+            <CTASection openSignUp={openSignUp}/>
             {/* FOOTER */}
             <FooterSection/>
         </div>

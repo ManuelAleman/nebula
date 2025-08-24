@@ -3,8 +3,9 @@ import { Check } from "lucide-react";
 
 interface PricingSectionProps {
     pricingPlans: PricingPlan[];
+    openSignUp : () => void;
 }
-const PricingSection = ({ pricingPlans }: PricingSectionProps) => {
+const PricingSection = ({ pricingPlans, openSignUp }: PricingSectionProps) => {
     return (
         <div className="py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,6 +55,7 @@ const PricingSection = ({ pricingPlans }: PricingSectionProps) => {
                                 </ul>
                                 <div className="rounded-md shadow">
                                     <button
+                                        onClick={()=>openSignUp()}
                                         className={`w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md ${plan.highlighted ? 'text-white bg-blue-500 hover:bg-blue-600' : 'text-blue-600 bg-white hover:bg-gray-50 border-blue-500'} transition-colors duration-200`}>
                                         {plan.cta}
                                     </button>
