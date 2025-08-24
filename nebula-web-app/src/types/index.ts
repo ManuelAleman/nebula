@@ -24,3 +24,8 @@ export type Testimonial = {
   quote: string;
   rating: number;
 }
+
+export type AuthModalHandlers = {
+  openSignIn: () => void;
+  openSignUp: () => void;
+}

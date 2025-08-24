@@ -5,20 +5,23 @@ import { Upload } from "lucide-react";
 import MyFiles from "./pages/MyFiles";
 import Subscription from "./pages/Subscription";
 import Transactions from "./pages/Transactions";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { RedirectToSignIn } from "@clerk/clerk-react";
 
 const App = () => {
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Landing/>}/>
-      <Route path="dashboard" element={<Dashboard/>}/>
-      <Route path="upload" element={<Upload/>}/>
-      <Route path="my-files" element={<MyFiles/>}/>
-      <Route path="subscription" element={<Subscription/>}/>
-      <Route path="transactions" element={<Transactions/>}/>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
+        <Route path="my-files" element={<ProtectedRoute><MyFiles /></ProtectedRoute>} />
+        <Route path="subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+        <Route path="transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+        <Route path="/*" element={<RedirectToSignIn />} />
+      </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
 export default App;
