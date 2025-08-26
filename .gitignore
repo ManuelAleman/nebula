@@ -18,6 +18,10 @@ hs_err_pid*
 replay_pid*
 *.log
 
+# Spring Boot local configuration
+application*.properties
+application*.yml
+
 # Maven
 .mvn/
 .settings/
