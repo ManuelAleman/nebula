@@ -1,10 +1,6 @@
 package in.manuelaleman.nebula_api.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +18,10 @@ import in.manuelaleman.nebula_api.document.ProfileDocument;
 import in.manuelaleman.nebula_api.dto.FileMetadataDTO;
 import in.manuelaleman.nebula_api.repository.FileMetadataRepository;
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,9 @@ public class FileMetadataService {
     private final FileMetadataRepository fileMetadataRepository;
     private final ProfileService profileService;
     private final UserCreditsService userCreditsService;
+    private final S3Client s3Client;
+    @Value("${aws.s3.bucket}")
+    private final String bucketName = "nebula-project-uploads";
 
     public List<FileMetadataDTO> uploadFiles(MultipartFile files[]) throws IOException {
         ProfileDocument currentProfile = profileService.getCurrentProfile();
@@ -38,16 +42,19 @@ public class FileMetadataService {
             throw new RuntimeException("Not enought credits to upload files. Please purchase more credits");
         }
 
-        Path uploadPath = Paths.get("upload").toAbsolutePath().normalize();
-        Files.createDirectories(uploadPath);
-
         for (MultipartFile file : files) {
-            String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
-            Path targetLocation = uploadPath.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            String key = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
+
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(key)
+                            .contentType(file.getContentType())
+                            .build(),
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
             FileMetadataDocument fileMetadata = FileMetadataDocument.builder()
-                    .fileLocation(targetLocation.toString())
+                    .fileLocation(key)
                     .name(file.getOriginalFilename())
                     .size(file.getSize())
                     .type(file.getContentType())
@@ -111,8 +118,10 @@ public class FileMetadataService {
                 throw new RuntimeException("File is not belong to current user");
             }
 
-            Path filePath = Paths.get(file.getFileLocation());
-            Files.deleteIfExists(filePath);
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(file.getFileLocation())
+                    .build());
 
             fileMetadataRepository.deleteById(id);
         } catch (Exception e) {
