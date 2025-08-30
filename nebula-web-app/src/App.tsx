@@ -7,10 +7,12 @@ import Subscription from "./pages/Subscription";
 import Transactions from "./pages/Transactions";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { RedirectToSignIn } from "@clerk/clerk-react";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <Toaster/>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

@@ -64,14 +64,12 @@ public class FileController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) throws IOException {
-        FileMetadataDTO downloadableFile = fileMetadataService.getDownloadableFile(id);
-
-        Path path = Paths.get(downloadableFile.getFileLocation());
-        Resource resource = new UrlResource(path.toUri());
+        FileMetadataDTO fileDto = fileMetadataService.getDownloadableFile(id);
+        Resource resource = fileMetadataService.downloadFile(id);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + downloadableFile.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDto.getName() + "\"")
                 .body(resource);
     }
 
@@ -83,7 +81,7 @@ public class FileController {
     }
 
     @PatchMapping("/{id}/toggle-public")
-    public ResponseEntity<?> tooglePublic(@PathVariable String id){
+    public ResponseEntity<?> tooglePublic(@PathVariable String id) {
         FileMetadataDTO file = fileMetadataService.togglePublic(id);
 
         return ResponseEntity.ok(file);

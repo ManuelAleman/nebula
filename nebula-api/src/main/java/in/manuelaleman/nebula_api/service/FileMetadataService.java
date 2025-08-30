@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +19,12 @@ import in.manuelaleman.nebula_api.document.ProfileDocument;
 import in.manuelaleman.nebula_api.dto.FileMetadataDTO;
 import in.manuelaleman.nebula_api.repository.FileMetadataRepository;
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
@@ -106,6 +110,19 @@ public class FileMetadataService {
                 .orElseThrow(() -> new RuntimeException("File not found"));
 
         return mapToDto(file);
+    }
+
+    public ByteArrayResource downloadFile(String id) {
+        FileMetadataDTO fileDto = getDownloadableFile(id);
+
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileDto.getFileLocation())
+                .build();
+
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
+
+        return new ByteArrayResource(objectBytes.asByteArray());
     }
 
     public void deleteFile(String id) {
