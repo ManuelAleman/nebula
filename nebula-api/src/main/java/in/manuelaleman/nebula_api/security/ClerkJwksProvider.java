@@ -36,7 +36,7 @@ public class ClerkJwksProvider {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jwks = mapper.readTree(URI.create(jwksUrl).toURL());
 
-        JsonNode keys = jwks.get("Keys");
+        JsonNode keys = jwks.get("keys");
         for(JsonNode keyNode : keys){
             String kid = keyNode.get("kid").asText();
             String kty = keyNode.get("kty").asText();

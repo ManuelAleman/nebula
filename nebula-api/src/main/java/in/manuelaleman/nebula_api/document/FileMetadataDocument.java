@@ -1,5 +1,7 @@
 package in.manuelaleman.nebula_api.document;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,15 +10,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection  = "user_credits")
-@Data
+@Document(collection = "files")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserCredits {
+@Data
+public class FileMetadataDocument{
+
     @Id
     private String id;
+    private String name;
+    private String type;
+    private Long size;
     private String clerkId;
-    private Integer credits;
-    private String plan;
+    private Boolean isPublic;
+    private String fileLocation;
+    private LocalDateTime uploadedAt;
+
 }

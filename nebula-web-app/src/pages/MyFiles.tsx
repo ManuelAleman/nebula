@@ -1,8 +1,12 @@
+import DashboardLayout from "@/layout/DashboardLayout";
+
 const MyFiles = () => {
     return (
-        <div>
-            My Files
-        </div>
+        <DashboardLayout activeMenu="My Files">
+            <div>
+                My Files
+            </div>
+        </DashboardLayout>
     )
 }
 

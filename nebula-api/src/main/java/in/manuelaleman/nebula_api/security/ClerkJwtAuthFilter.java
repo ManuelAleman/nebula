@@ -35,13 +35,16 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (request.getRequestURI().contains("/webhooks")) {
+        if (request.getRequestURI().contains("/webhooks") ||
+            request.getRequestURI().contains("/public") ||
+            request.getRequestURI().contains("/download")) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Authorization header missing or invalid");
             return;
         }

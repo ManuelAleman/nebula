@@ -87,9 +87,7 @@ public class ClerkWebhookController {
                 .build();
 
         profileService.createProfile(newProfile);
-        if (!userCreditsService.exists(clerkId)) {
         userCreditsService.createInitialCredits(clerkId);
-    }
     }
 
     private void handleUserUpdated(JsonNode data) {

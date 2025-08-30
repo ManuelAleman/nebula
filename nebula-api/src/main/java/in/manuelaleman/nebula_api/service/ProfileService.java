@@ -3,6 +3,8 @@ package in.manuelaleman.nebula_api.service;
 import java.time.Instant;
 import java.util.function.Consumer;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import in.manuelaleman.nebula_api.document.ProfileDocument;
@@ -43,7 +45,18 @@ public class ProfileService {
 
     public void deleteProfile(String clerkId) {
         ProfileDocument existingProfile = profileRepository.findByClerkId(clerkId).orElse(null);
-        if(existingProfile!= null) profileRepository.delete(existingProfile);
+        if (existingProfile != null)
+            profileRepository.delete(existingProfile);
+    }
+
+    public ProfileDocument getCurrentProfile() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new UsernameNotFoundException("User not authenticated");
+        }
+
+        String clerkId = SecurityContextHolder.getContext().getAuthentication().getName();
+        return profileRepository.findByClerkId(clerkId)
+                .orElseThrow(() -> new UsernameNotFoundException("Profile not found for clerkId: " + clerkId));
     }
 
     private void updateIfNotEmpty(String newValue, Consumer<String> setter) {
