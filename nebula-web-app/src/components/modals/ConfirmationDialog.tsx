@@ -1,4 +1,4 @@
-import Modal from "./modals/Modal";
+import Modal from "./Modal";
 
 interface ConfirmationDialogProps {
     isOpen: boolean;

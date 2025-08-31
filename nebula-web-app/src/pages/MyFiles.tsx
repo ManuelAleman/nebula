@@ -1,14 +1,14 @@
 import DashboardLayout from "@/layout/DashboardLayout";
 import { File, FileIcon, FileText, Grid, List, Music, Video, Image } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import type { FileMetadataDTO } from "@/types/files";
-import FileCard from "@/components/FileCard";
+import FileCard from "@/components/files/FileCard";
 import { useApi } from "@/utils/api";
 import { apiEndpoints } from "@/utils/apiEndpoints";
-import ConfirmationDialog from "@/components/ConfirmationDialog";
-import FileListRow from "@/components/FileListRow";
+import ConfirmationDialog from "@/components/modals/ConfirmationDialog";
+import FileListRow from "@/components/files/FileListRow";
 import LinkShareModal from "@/components/modals/LinkShareModal";
 const MyFiles = () => {
     const [files, setFiles] = useState<FileMetadataDTO[]>([]);
@@ -25,20 +25,18 @@ const MyFiles = () => {
         link: ''
     })
 
-    const fetchFiles = async () => {
+    const fetchFiles = useCallback(async () => {
         try {
-            const response = await apiPrivate.get(apiEndpoints.FETCH_FILES)
+            const response = await apiPrivate.get(apiEndpoints.FETCH_FILES);
             if (response.status === 200) setFiles(response.data);
         } catch (err: unknown) {
             if (err instanceof Error) {
-                console.log('Error fetching the files from the server: ', err);
-                toast.error('Error fetching the files from the server: ' + err.message);
+                toast.error("Error fetching files: " + err.message);
             } else {
-                console.log('Unexpected error: ', err);
-                toast.error('Unexpected error occurred');
+                toast.error("Unexpected error occurred");
             }
         }
-    };
+    }, [apiPrivate]);
 
     const togglePublic = async (fileToUpdate: FileMetadataDTO) => {
         try {
@@ -141,7 +139,7 @@ const MyFiles = () => {
 
     useEffect(() => {
         fetchFiles();
-    }, []);
+    }, [fetchFiles]);
     const getFileIcon = (file: FileMetadataDTO) => {
         const extension = file.name.split('.').pop()?.toLowerCase();
 

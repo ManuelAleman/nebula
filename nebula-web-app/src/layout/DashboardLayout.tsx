@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import SideMenu from "@/components/SideMenu";
+import Navbar from "@/components/ui/Navbar";
+import SideMenu from "@/components/ui/SideMenu";
 import { useUser } from "@clerk/clerk-react";
 import type { ReactNode } from "react";
 
