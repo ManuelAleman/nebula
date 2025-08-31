@@ -37,7 +37,7 @@ export const UserCreditsProvider = ({ children }: UserCreditsProviderProps) => {
         } finally {
             setLoading(false);
         }
-    }, [isSignedIn, apiPrivate]);
+    }, [isSignedIn]);
 
     useEffect(() => {
         if(isSignedIn) fetchUserCredits();

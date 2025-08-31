@@ -36,7 +36,7 @@ const MyFiles = () => {
                 toast.error("Unexpected error occurred");
             }
         }
-    }, [apiPrivate]);
+    }, []);
 
     const togglePublic = async (fileToUpdate: FileMetadataDTO) => {
         try {

@@ -10,9 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PaymentDTO {
-    
+    private String clerkId;
     private String planId;
-    private Integer amount;
+    private Long amount;
     private String currency;
     private Integer credits;
+    private String paymentMethod;
+    private Boolean success;
+    private String paymentId;
+    private String clientSecret;
+    private String message;
+
 }
