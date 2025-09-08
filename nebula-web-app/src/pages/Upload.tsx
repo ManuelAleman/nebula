@@ -73,7 +73,7 @@ const Upload= () => {
             setFiles([]);
         } catch (err: unknown) {
             if (err instanceof Error) {
-                console.log('Error while deleting the file: ', err);
+                console.log('Error while uploading the file: ', err);
                 setMessage('Error uploading files. Please try again');;
                 setMessageType('error');
             } else {

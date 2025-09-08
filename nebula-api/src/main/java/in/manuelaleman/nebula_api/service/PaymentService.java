@@ -26,15 +26,17 @@ public class PaymentService {
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
 
+    @Value("${frontend.url.redirect.payment}")
+    private String redirectUrl;
+
     public PaymentDTO verifyPayment(PaymentVerificationDTO paymentVerificationDTO) {
         try {
             Stripe.apiKey = stripeSecretKey;
 
-            
             Session session = Session.retrieve(paymentVerificationDTO.getPaymentId());
 
             if ("complete".equals(session.getStatus()) && "paid".equals(session.getPaymentStatus())) {
-                
+
                 PaymentTransaction transaction = paymentTransactionRepository
                         .findByPaymentId(session.getId());
 
@@ -45,7 +47,6 @@ public class PaymentService {
                     int creditsToAdd = 0;
                     String plan = "BASIC";
 
-                    
                     switch (transaction.getPlanId()) {
                         case "premium":
                             creditsToAdd = 500;
@@ -100,8 +101,9 @@ public class PaymentService {
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:5173/subscription-success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl("http://localhost:5173/subscriptions")
+                    .setSuccessUrl(
+                            System.getenv("FRONTEND_URL") + "/subscription-success?session_id={CHECKOUT_SESSION_ID}")
+                    .setCancelUrl(System.getenv("FRONTEND_URL") + "/subscriptions")
                     .setCustomerEmail(profileService.getCurrentProfile().getEmail())
                     .setLocale(SessionCreateParams.Locale.EN)
                     .addLineItem(

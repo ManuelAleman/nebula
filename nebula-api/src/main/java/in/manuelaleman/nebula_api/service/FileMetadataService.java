@@ -35,8 +35,7 @@ public class FileMetadataService {
     private final ProfileService profileService;
     private final UserCreditsService userCreditsService;
     private final S3Client s3Client;
-    @Value("${aws.s3.bucket}")
-    private final String bucketName = "nebula-project-uploads";
+    private String bucketName = "nebula-project-uploads";
 
     public List<FileMetadataDTO> uploadFiles(MultipartFile files[]) throws IOException {
         ProfileDocument currentProfile = profileService.getCurrentProfile();

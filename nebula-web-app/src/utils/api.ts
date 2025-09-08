@@ -18,5 +18,5 @@ export const useApi = () => {
     baseURL: import.meta.env.VITE_API_URL,
   });
 
-  return { apiPrivate, apiPublic };
+  return { apiPrivate, apiPublic, token: getToken };
 };

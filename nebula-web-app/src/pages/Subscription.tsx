@@ -2,7 +2,6 @@ import { useUserCredits } from "@/context/useUserCredits";
 import DashboardLayout from "@/layout/DashboardLayout";
 import { useApi } from "@/utils/api";
 import { apiEndpoints } from "@/utils/apiEndpoints";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { AlertCircle, Check, CreditCard, Loader2 } from "lucide-react";
 import { useState } from "react";
 
@@ -10,16 +9,12 @@ const Subscription = () => {
     const [processingPayment, setProcessingPayment] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
-    const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const { credits } = useUserCredits();
     const { apiPrivate } = useApi();
     const plans = [
         { id: "premium", name: "Premium", credits: 500, price: 10, features: ["Upload up to 500 files", "Access to all basic features", "Priority support"], recommended: false },
         { id: "ultimate", name: "Ultimate", credits: 5000, price: 15, features: ["Upload up to 5000 files", "Access to all premium features", "Priority support", "Advanced analytics"], recommended: true }
     ];
-
-    const stripe = useStripe();
-    const elements = useElements();
 
     const handleCheckout = async (plan: any) => {
         setProcessingPayment(true);
@@ -102,7 +97,6 @@ const Subscription = () => {
 
                             <button
                                 onClick={() => {
-                                    setSelectedPlan(plan.id);
                                     handleCheckout(plan);
                                 }}
                                 disabled={processingPayment}

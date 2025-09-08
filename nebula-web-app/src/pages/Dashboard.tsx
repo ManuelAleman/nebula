@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import type { FileMetadataDTO } from "@/types/files";
 
 const Dashboard = () => {
-    const { apiPrivate } = useApi();
+    const { apiPrivate, token } = useApi();
     const [recentFiles, setRecentFiles] = useState<FileMetadataDTO[]>([]);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const Dashboard = () => {
             } catch (err) {}
         };
         fetchFiles();
-    }, [apiPrivate]);
+    }, [token]);
 
     return (
         <DashboardLayout activeMenu="Dashboard">
