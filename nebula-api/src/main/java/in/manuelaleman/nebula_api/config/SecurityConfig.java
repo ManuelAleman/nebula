@@ -48,7 +48,9 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000", 
                 "http://127.0.0.1:3000", 
-                "http://frontend:80"
+                "http://frontend:80",
+                "https://nebula-ten-azure.vercel.app",
+                "https://*.vercel.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
